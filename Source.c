@@ -122,6 +122,12 @@ struct Polynom polynomPow(struct Polynom a,int number) {
     newPolynom = a;
     for (int i = 0; i < number - 1; i++) {
         newPolynom = polynomMul(newPolynom, a);
+        for (int j = 0; j < MAX_LEN; j++) {
+            if (newPolynom.koef[j][COEF] ==  0 && newPolynom.koef[j][DEG] != 0) {
+                newPolynom.koef[j][DEG] = -1;
+                newPolynom.koef[j][COEF] = 0;
+            }
+        }
     }
     return newPolynom;
 }
@@ -185,12 +191,14 @@ struct Polynom polynomPowPolynom(struct Polynom a, struct Polynom b) {
         }
     }
     int index = hasDeg(b, 0);
+    struct Polynom res;
     if (index !=-1) {
-        polynomPow(a, b.koef[index][COEF]);
+        res = polynomPow(a, b.koef[index][COEF]);
     }
     else {
-        polynomPow(a, 0);
+        res = polynomPow(a, 0);
     }
+    return res;
 }
 struct Polynom putPolynom(char name) {
     if (varsArray[name - 'A'].name != name) {

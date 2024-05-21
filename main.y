@@ -22,8 +22,8 @@
 
 %right '='
 %left '-' '+'
-%left '*'
 %left NEG    
+%left '*'
 %right '^'  
 
 
@@ -48,26 +48,27 @@ polynom: monomial {$$ = polynomInit($1);}
 	| polynom '*' polynom {$$ = polynomMul($1,$3)}
 	//| '(' polynom ')' polynom { $$ = polynomMul($2, $4);} 
 	//| polynom '(' polynom ')' { $$ = polynomMul($1, $3);} 
-        | '-' polynom %prec NEG { $$ = unaryMinus($2); }
-	| polynom '^' number {$$ = polynomPow($1,$3)}
+        | '-' polynom %prec NEG { $$	 = unaryMinus($2); }
+	//| polynom '^' number {$$ = polynomPow($1,$3)}
 	| polynom '^' polynom {$$ = polynomPowPolynom($1,$3)}
 	| polynom polynom %prec '*' { $$ = polynomMul($1, $2);} 
 	| '(' polynom ')' { $$ = $2; }
 ;
 
 	
-monomial: number LETTER_LOW '^' number{$$.coefficient = $1;$$.deg=$4;$$.name=$2}
-	| number LETTER_LOW{$$.coefficient = $1;$$.deg=1;$$.name=$2}	
-	| LETTER_LOW number {$$.coefficient = $2;$$.deg=1;$$.name=$1}	
-	| LETTER_LOW '^' number{$$.coefficient = 1;$$.deg=$3;$$.name=$1}
-	| LETTER_LOW {$$.coefficient = 1;$$.deg=1;$$.name=$1}
+monomial: LETTER_LOW {$$.coefficient = 1;$$.deg=1;$$.name=$1}
 	| number {$$.coefficient = $1; $$.deg=0; $$.name=0}
+	//number LETTER_LOW{$$.coefficient = $1;$$.deg=1;$$.name=$2}	 
+	//number LETTER_LOW '^' number{$$.coefficient = $1;$$.deg=$4;$$.name=$2}
+	//| LETTER_LOW number {$$.coefficient = $2;$$.deg=1;$$.name=$1}	
+	//| LETTER_LOW '^' number{$$.coefficient = 1;$$.deg=$3;$$.name=$1}
+	
 ;
 
 
 number: DIGIT{$$=$1;} 
 	| number DIGIT { $$ = $1*10  + $2; }
-	| number '^' number {$$ = pow($1,$3);} 
+	//| number '^' number {$$ = pow($1,$3);} 
 ;
 
 %%
