@@ -187,7 +187,8 @@ struct Polynom polynomPowPolynom(struct Polynom a, struct Polynom b) {
     for (int i = 0; i < MAX_LEN; i++) {
         if (b.koef[i][DEG] > 0) {
             yyerror("pow polynom in polynom");
-            return;
+            //return;
+            exit(-1);
         }
     }
     int index = hasDeg(b, 0);

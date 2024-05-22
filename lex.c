@@ -3,6 +3,7 @@
 
 extern FILE* f;
 int line = 1;
+int check = 0;
 int yylex(){
 	int c;
 	while ((c = getc(f)) == ' ' || c == '\t');
@@ -21,10 +22,15 @@ int yylex(){
 	}
 	if (c == '\n') {
 		line++;
+		check = 0;
 	}
 
 	if (c >= 'a' && c <= 'z') {
 		yylval.sym = c;
+		if (!check) check = c;
+		else {
+			if (check != c) { yyerror("error - different values"); exit(-1); }
+		}
 		return LETTER_LOW;
 	}
 	if (c >= 'A' && c <= 'Z') {

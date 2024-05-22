@@ -36,6 +36,9 @@ file:
 line: '\n'
 	| polynom '\n' {polynomPrint($1);}
 	| LETTER_UPPERCASE '=' polynom '\n' { polynomVarInit($1, $3);}
+	| LETTER_LOW '=' polynom '\n' { yyerror("syntax error - can't assign poly to poly"); }
+	//| polynom LETTER_LOW '=' polynom '\n' { yyerror("syntax error - can't assign poly to poly"); }
+	//| polynom LETTER_LOW polynom '=' polynom '\n' { yyerror("syntax error - can't assign poly to poly"); }
     	| '?' LETTER_UPPERCASE '\n' {polynomVarPrint($2);}
 	| error '\n' { yyerrok; printf("Error in this line.\n");  }
 ;
