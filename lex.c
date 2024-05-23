@@ -2,7 +2,7 @@
 #include "main.tab.c"
 
 extern FILE* f;
-int line = 1;
+int line = 0;
 int check = 0;
 int yylex(){
 	int c;
@@ -20,10 +20,7 @@ int yylex(){
 	if (c == EOF) {
 		return 0;
 	}
-	if (c == '\n') {
-		line++;
-		check = 0;
-	}
+	
 
 	if (c >= 'a' && c <= 'z') {
 		yylval.sym = c;
@@ -45,6 +42,10 @@ int yylex(){
 		&& c != '*' && c != '^' && c != '(' && c != ')' && c != '\n') {
 		printf("Syntax error: unrecognized symbol in line %d.\n",line );
 		exit(-1);
+	}
+	if (c == '\n') {
+		line++;
+		check = 0;
 	}
 
 	return c;

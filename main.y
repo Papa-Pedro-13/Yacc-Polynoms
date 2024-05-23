@@ -39,8 +39,8 @@ line: '\n'
 	| LETTER_LOW '=' polynom '\n' { yyerror("syntax error - can't assign poly to poly"); }
 	//| polynom LETTER_LOW '=' polynom '\n' { yyerror("syntax error - can't assign poly to poly"); }
 	//| polynom LETTER_LOW polynom '=' polynom '\n' { yyerror("syntax error - can't assign poly to poly"); }
-    	| '?' LETTER_UPPERCASE '\n' {polynomVarPrint($2);}
-	| error '\n' { yyerrok; printf("Error in this line.\n");  }
+    	//| '?' LETTER_UPPERCASE '\n' {polynomVarPrint($2);}
+	| error '\n' { yyerrok;  }
 ;
 	
 polynom: monomial {$$ = polynomInit($1);}
@@ -53,7 +53,7 @@ polynom: monomial {$$ = polynomInit($1);}
 	//| polynom '(' polynom ')' { $$ = polynomMul($1, $3);} 
         | '-' polynom %prec NEG { $$	 = unaryMinus($2); }
 	//| polynom '^' number {$$ = polynomPow($1,$3)}
-	| polynom '^' polynom {$$ = polynomPowPolynom($1,$3)}
+	| polynom '^' polynom {$$ = polynomPowPolynom($1,$3);if($$.error==1) YYERROR;}
 	| polynom polynom %prec '*' { $$ = polynomMul($1, $2);} 
 	| '(' polynom ')' { $$ = $2; }
 ;

@@ -111,6 +111,24 @@ struct Polynom polynomMul(struct Polynom a, struct Polynom b) {
 };
 struct Polynom polynomPow(struct Polynom a,int number) {
     struct Polynom newPolynom;
+    if (number < 0) {
+        yyerror("negative power");
+        newPolynom.error = 1;
+        return newPolynom;
+    }
+    if (number == 0) {
+        bool isZero = true;
+        for (int i = 0; i < MAX_LEN; i++) {
+            if (a.koef[i][COEF] != 0) {
+                isZero = false;
+            }
+        }
+        if (isZero) {
+            yyerror("undefined 0^0");
+            newPolynom.error = 1;
+            return newPolynom;
+        }
+    }
     if (number == 0) {
         struct Mono empty;
         empty.deg = 0;
@@ -184,16 +202,19 @@ struct Polynom unaryMinus(struct Polynom a) {
 
 }
 struct Polynom polynomPowPolynom(struct Polynom a, struct Polynom b) {
+    struct Polynom res;
     for (int i = 0; i < MAX_LEN; i++) {
         if (b.koef[i][DEG] > 0) {
             yyerror("pow polynom in polynom");
             //return;
-            exit(-1);
+            res.error = 1;
+            return res;
         }
     }
     int index = hasDeg(b, 0);
-    struct Polynom res;
+    
     if (index !=-1) {
+        
         res = polynomPow(a, b.koef[index][COEF]);
     }
     else {
@@ -228,8 +249,11 @@ void polynomVarInit(char name, struct Polynom a) {
 
 FILE* f;
 
-int main() {
-	f = fopen("example.txt","r");
+int main(int argc, char*argv[]) {
+	f = fopen(argv[1],"r");
 	yyparse();
 	fclose(f);
+    //Должен быть отсортирован вывод
+    //Полинов от нескольких переменных A=x B=y A=A-B должно быть ошибкой
+    
 }
