@@ -46,9 +46,9 @@ line: '\n'
 polynom: monomial {$$ = polynomInit($1);}
 	| LETTER_UPPERCASE { $$ = putPolynom($1);}
 /*	| polynom '(' polynom ')' polynom { $$ = polynomMul($1, $5);} */
-	| polynom '+' polynom {$$ = polynomSum($1,$3)}
-	| polynom '-' polynom {$$ = polynomSub($1,$3)}
-	| polynom '*' polynom {$$ = polynomMul($1,$3)}
+	| polynom '+' polynom {$$ = polynomSum($1,$3);if($$.error==1) YYERROR;}
+	| polynom '-' polynom {$$ = polynomSub($1,$3);if($$.error==1) YYERROR;}
+	| polynom '*' polynom {$$ = polynomMul($1,$3);if($$.error==1) YYERROR;}
 	//| '(' polynom ')' polynom { $$ = polynomMul($2, $4);} 
 	//| polynom '(' polynom ')' { $$ = polynomMul($1, $3);} 
         | '-' polynom %prec NEG { $$	 = unaryMinus($2); }
