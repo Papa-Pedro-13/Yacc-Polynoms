@@ -190,17 +190,17 @@ void polynomPrint(struct Polynom a) {
     bool isZero = true;
     a=sortPolynom(a);
     for (int i = MAX_LEN-1; i >= 0; i--) {
-        //Ненулевой одночлен
+        //ГЌГҐГ­ГіГ«ГҐГўГ®Г© Г®Г¤Г­Г®Г·Г«ГҐГ­
         if (a.koef[i][COEF] != 0) {
             isZero = false;
-            //Не первый и положительный одночлен - выводим плюс
+            //ГЌГҐ ГЇГҐГ°ГўГ»Г© ГЁ ГЇГ®Г«Г®Г¦ГЁГІГҐГ«ГјГ­Г»Г© Г®Г¤Г­Г®Г·Г«ГҐГ­ - ГўГ»ГўГ®Г¤ГЁГ¬ ГЇГ«ГѕГ±
             if (!firstPrint && a.koef[i][COEF]>0) {
                 printf("+");
             }
-            //Одночлен с ненулевой степенью
+            //ГЋГ¤Г­Г®Г·Г«ГҐГ­ Г± Г­ГҐГ­ГіГ«ГҐГўГ®Г© Г±ГІГҐГЇГҐГ­ГјГѕ
             if (a.koef[i][DEG] != 0) {
                 if (a.koef[i][COEF] != 1) {
-                    //Случай: -1x
+                    //Г‘Г«ГіГ·Г Г©: -1x
                     if (a.koef[i][COEF] == -1) {
                         printf("-");
                     }
@@ -208,14 +208,14 @@ void polynomPrint(struct Polynom a) {
                         printf("%d", a.koef[i][COEF]);
                     }
                 }
-                //Выводим букву (x)
+                //Г‚Г»ГўГ®Г¤ГЁГ¬ ГЎГіГЄГўГі (x)
                 printf("%c", a.name);
-                //Степень
+                //Г‘ГІГҐГЇГҐГ­Гј
                 if (a.koef[i][DEG] > 1) {
                     printf("^%d", a.koef[i][DEG]);
                 }            
             }
-            //Число
+            //Г—ГЁГ±Г«Г®
             else {
                 printf("%d", a.koef[i][COEF]);
             }
@@ -225,6 +225,57 @@ void polynomPrint(struct Polynom a) {
     if (isZero) printf("0");
     printf("\n");
 };
+int isAllPrinted(struct Polynom a) {
+    int resultDeg = -1;
+    int index = -1;
+
+    //check if there is not a null degree
+    for (int i = MAX_LEN - 1; i >= 0; i--) {
+        if (a.koef[i][COEF] != 0) {
+            if (a.koef[i][DEG] > resultDeg) { resultDeg = a.koef[i][DEG]; index = i; }
+        }
+    }
+
+    return index;
+}
+//void polynomPrint(struct Polynom a) {
+//    bool isZero = true;
+//    bool firstPrint = true;
+//    int indexOfMax = isAllPrinted(a);
+//
+//    //until all components printed
+//    while (indexOfMax != -1) {
+//        isZero = false;
+//        
+//        //***PRINT STARTS HERE***
+//        //not first and positive
+//        if (!firstPrint && a.koef[indexOfMax][COEF] > 0) {
+//            printf("+");
+//        }
+//
+//        //printing COEF
+//        if (a.koef[indexOfMax][COEF] != 1 || a.koef[indexOfMax][DEG]==0) {
+//            if (a.koef[indexOfMax][COEF] == -1) printf("-");
+//            else printf("%d", a.koef[indexOfMax][COEF]); 
+//        }
+//
+//        //printing letter
+//        if (a.koef[indexOfMax][DEG] != 0) printf("%c", a.name);
+//
+//        //printing degree
+//        if (a.koef[indexOfMax][DEG] > 1) printf("^%d", a.koef[indexOfMax][DEG]);
+//
+//        firstPrint = false;
+//        // ***END OF PRINT***
+//
+//        a.koef[indexOfMax][DEG] = -1;
+//        a.koef[indexOfMax][COEF] = 0;
+//        indexOfMax = isAllPrinted(a);
+//    }
+//
+//    if (isZero) printf("0");
+//    printf("\n");
+//}
 struct Polynom unaryMinus(struct Polynom a) {
     struct Mono empty;
     empty.deg = 0;
@@ -291,6 +342,6 @@ int main(int argc, char*argv[]) {
 	f = fopen(argv[1],"r");
 	yyparse();
 	fclose(f);
-    //принципы языка, грамматика в отчете, почему стат массив?, 
-    //структурировать ошибки по кат, ошибка нулевой строки x^0 = y, как боролись с ошибками yacc shift/reduce, 
+    //ГЇГ°ГЁГ­Г¶ГЁГЇГ» ГїГ§Г»ГЄГ , ГЈГ°Г Г¬Г¬Г ГІГЁГЄГ  Гў Г®ГІГ·ГҐГІГҐ, ГЇГ®Г·ГҐГ¬Гі Г±ГІГ ГІ Г¬Г Г±Г±ГЁГў?, 
+    //Г±ГІГ°ГіГЄГІГіГ°ГЁГ°Г®ГўГ ГІГј Г®ГёГЁГЎГЄГЁ ГЇГ® ГЄГ ГІ, Г®ГёГЁГЎГЄГ  Г­ГіГ«ГҐГўГ®Г© Г±ГІГ°Г®ГЄГЁ x^0 = y, ГЄГ ГЄ ГЎГ®Г°Г®Г«ГЁГ±Гј Г± Г®ГёГЁГЎГЄГ Г¬ГЁ yacc shift/reduce, 
 }
