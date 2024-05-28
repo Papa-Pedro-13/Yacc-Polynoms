@@ -190,17 +190,17 @@ void polynomPrint(struct Polynom a) {
     bool isZero = true;
     a=sortPolynom(a);
     for (int i = MAX_LEN-1; i >= 0; i--) {
-        //Ненулевой одночлен
+        //ГЌГҐГ­ГіГ«ГҐГўГ®Г© Г®Г¤Г­Г®Г·Г«ГҐГ­
         if (a.koef[i][COEF] != 0) {
             isZero = false;
-            //Не первый и положительный одночлен - выводим плюс
+            //ГЌГҐ ГЇГҐГ°ГўГ»Г© ГЁ ГЇГ®Г«Г®Г¦ГЁГІГҐГ«ГјГ­Г»Г© Г®Г¤Г­Г®Г·Г«ГҐГ­ - ГўГ»ГўГ®Г¤ГЁГ¬ ГЇГ«ГѕГ±
             if (!firstPrint && a.koef[i][COEF]>0) {
                 printf("+");
             }
-            //Одночлен с ненулевой степенью
+            //ГЋГ¤Г­Г®Г·Г«ГҐГ­ Г± Г­ГҐГ­ГіГ«ГҐГўГ®Г© Г±ГІГҐГЇГҐГ­ГјГѕ
             if (a.koef[i][DEG] != 0) {
                 if (a.koef[i][COEF] != 1) {
-                    //Случай: -1x
+                    //Г‘Г«ГіГ·Г Г©: -1x
                     if (a.koef[i][COEF] == -1) {
                         printf("-");
                     }
@@ -208,14 +208,14 @@ void polynomPrint(struct Polynom a) {
                         printf("%d", a.koef[i][COEF]);
                     }
                 }
-                //Выводим букву (x)
+                //Г‚Г»ГўГ®Г¤ГЁГ¬ ГЎГіГЄГўГі (x)
                 printf("%c", a.name);
-                //Степень
+                //Г‘ГІГҐГЇГҐГ­Гј
                 if (a.koef[i][DEG] > 1) {
                     printf("^%d", a.koef[i][DEG]);
                 }            
             }
-            //Число
+            //Г—ГЁГ±Г«Г®
             else {
                 printf("%d", a.koef[i][COEF]);
             }
@@ -338,10 +338,10 @@ void polynomVarInit(char name, struct Polynom a) {
 FILE* f;
 
 int main(int argc, char*argv[]) {
-    f = fopen("example.txt", "r");
-	///f = fopen(argv[1],"r");
+    //f = fopen("example.txt", "r");
+	f = fopen(argv[1],"r");
 	yyparse();
 	fclose(f);
-    //Должен быть отсортирован вывод
-    //Полинов от нескольких переменных A=x B=y A=A-B должно быть ошибкой
+    //ГЇГ°ГЁГ­Г¶ГЁГЇГ» ГїГ§Г»ГЄГ , ГЈГ°Г Г¬Г¬Г ГІГЁГЄГ  Гў Г®ГІГ·ГҐГІГҐ, ГЇГ®Г·ГҐГ¬Гі Г±ГІГ ГІ Г¬Г Г±Г±ГЁГў?, 
+    //Г±ГІГ°ГіГЄГІГіГ°ГЁГ°Г®ГўГ ГІГј Г®ГёГЁГЎГЄГЁ ГЇГ® ГЄГ ГІ, Г®ГёГЁГЎГЄГ  Г­ГіГ«ГҐГўГ®Г© Г±ГІГ°Г®ГЄГЁ x^0 = y, ГЄГ ГЄ ГЎГ®Г°Г®Г«ГЁГ±Гј Г± Г®ГёГЁГЎГЄГ Г¬ГЁ yacc shift/reduce, 
 }
