@@ -254,7 +254,7 @@ int isAllPrinted(struct Polynom a) {
 //        }
 //
 //        //printing COEF
-//        if (a.koef[indexOfMax][COEF] != 1) {
+//        if (a.koef[indexOfMax][COEF] != 1 || a.koef[indexOfMax][DEG]==0) {
 //            if (a.koef[indexOfMax][COEF] == -1) printf("-");
 //            else printf("%d", a.koef[indexOfMax][COEF]); 
 //        }
