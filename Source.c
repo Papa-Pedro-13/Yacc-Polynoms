@@ -58,7 +58,6 @@ struct Polynom polynomSub(struct Polynom a, struct Polynom b) {
         yyerror("different values");
         a.error = 1; //we change only function-local a.error state to 1, in global meaning it's still a.error == 0 for a
         return a;    //so it's ok to change a there
-
     }
     //Sub all in A and in B
     for (int i = 0; i < MAX_LEN; i++) {
@@ -170,45 +169,62 @@ struct Polynom polynomPow(struct Polynom a,int number) {
     }
     return newPolynom;
 }
-//void polynomPrint(struct Polynom a) {
-//    bool firstPrint = true;
-//    bool isZero = true;
-//    for (int i = MAX_LEN-1; i >= 0; i--) {
-//        //Ненулевой одночлен
-//        if (a.koef[i][COEF] != 0) {
-//            isZero = false;
-//            //Не первый и положительный одночлен - выводим плюс
-//            if (!firstPrint && a.koef[i][COEF]>0) {
-//                printf("+");
-//            }
-//            //Одночлен с ненулевой степенью
-//            if (a.koef[i][DEG] != 0) {
-//                if (a.koef[i][COEF] != 1) {
-//                    //Случай: -1x
-//                    if (a.koef[i][COEF] == -1) {
-//                        printf("-");
-//                    }
-//                    else {
-//                        printf("%d", a.koef[i][COEF]);
-//                    }
-//                }
-//                //Выводим букву (x)
-//                printf("%c", a.name);
-//                //Степень
-//                if (a.koef[i][DEG] > 1) {
-//                    printf("^%d", a.koef[i][DEG]);
-//                }            
-//            }
-//            //Число
-//            else {
-//                printf("%d", a.koef[i][COEF]);
-//            }
-//            firstPrint = false;
-//        }
-//    }
-//    if (isZero) printf("0");
-//    printf("\n");
-//};
+struct Polynom sortPolynom(struct Polynom a) {
+    for (int i = 0; i < MAX_LEN; i++) {
+        for (int j = 0; j < MAX_LEN-1; j++) {
+            if (a.koef[j][DEG] > a.koef[j + 1][DEG]) {
+                struct Polynom tmp;
+                tmp.koef[0][DEG] = a.koef[j + 1][DEG];
+                tmp.koef[0][COEF] = a.koef[j + 1][COEF];
+                a.koef[j + 1][DEG] = a.koef[j][DEG];
+                a.koef[j + 1][COEF] = a.koef[j][COEF];
+                a.koef[j][DEG] = tmp.koef[0][DEG];
+                a.koef[j][COEF] = tmp.koef[0][COEF];
+            }
+        }
+    }
+    return a;
+}
+void polynomPrint(struct Polynom a) {
+    bool firstPrint = true;
+    bool isZero = true;
+    a=sortPolynom(a);
+    for (int i = MAX_LEN-1; i >= 0; i--) {
+        //Ненулевой одночлен
+        if (a.koef[i][COEF] != 0) {
+            isZero = false;
+            //Не первый и положительный одночлен - выводим плюс
+            if (!firstPrint && a.koef[i][COEF]>0) {
+                printf("+");
+            }
+            //Одночлен с ненулевой степенью
+            if (a.koef[i][DEG] != 0) {
+                if (a.koef[i][COEF] != 1) {
+                    //Случай: -1x
+                    if (a.koef[i][COEF] == -1) {
+                        printf("-");
+                    }
+                    else {
+                        printf("%d", a.koef[i][COEF]);
+                    }
+                }
+                //Выводим букву (x)
+                printf("%c", a.name);
+                //Степень
+                if (a.koef[i][DEG] > 1) {
+                    printf("^%d", a.koef[i][DEG]);
+                }            
+            }
+            //Число
+            else {
+                printf("%d", a.koef[i][COEF]);
+            }
+            firstPrint = false;
+        }
+    }
+    if (isZero) printf("0");
+    printf("\n");
+};
 int isAllPrinted(struct Polynom a) {
     int resultDeg = -1;
     int index = -1;
@@ -222,44 +238,44 @@ int isAllPrinted(struct Polynom a) {
 
     return index;
 }
-void polynomPrint(struct Polynom a) {
-    bool isZero = true;
-    bool firstPrint = true;
-    int indexOfMax = isAllPrinted(a);
-
-    //until all components printed
-    while (indexOfMax != -1) {
-        isZero = false;
-        
-        //***PRINT STARTS HERE***
-        //not first and positive
-        if (!firstPrint && a.koef[indexOfMax][COEF] > 0) {
-            printf("+");
-        }
-
-        //printing COEF
-        if (a.koef[indexOfMax][COEF] != 1) {
-            if (a.koef[indexOfMax][COEF] == -1) printf("-");
-            else printf("%d", a.koef[indexOfMax][COEF]); 
-        }
-
-        //printing letter
-        if (a.koef[indexOfMax][DEG] != 0) printf("%c", a.name);
-
-        //printing degree
-        if (a.koef[indexOfMax][DEG] > 1) printf("^%d", a.koef[indexOfMax][DEG]);
-
-        firstPrint = false;
-        // ***END OF PRINT***
-
-        a.koef[indexOfMax][DEG] = -1;
-        a.koef[indexOfMax][COEF] = 0;
-        indexOfMax = isAllPrinted(a);
-    }
-
-    if (isZero) printf("0");
-    printf("\n");
-}
+//void polynomPrint(struct Polynom a) {
+//    bool isZero = true;
+//    bool firstPrint = true;
+//    int indexOfMax = isAllPrinted(a);
+//
+//    //until all components printed
+//    while (indexOfMax != -1) {
+//        isZero = false;
+//        
+//        //***PRINT STARTS HERE***
+//        //not first and positive
+//        if (!firstPrint && a.koef[indexOfMax][COEF] > 0) {
+//            printf("+");
+//        }
+//
+//        //printing COEF
+//        if (a.koef[indexOfMax][COEF] != 1) {
+//            if (a.koef[indexOfMax][COEF] == -1) printf("-");
+//            else printf("%d", a.koef[indexOfMax][COEF]); 
+//        }
+//
+//        //printing letter
+//        if (a.koef[indexOfMax][DEG] != 0) printf("%c", a.name);
+//
+//        //printing degree
+//        if (a.koef[indexOfMax][DEG] > 1) printf("^%d", a.koef[indexOfMax][DEG]);
+//
+//        firstPrint = false;
+//        // ***END OF PRINT***
+//
+//        a.koef[indexOfMax][DEG] = -1;
+//        a.koef[indexOfMax][COEF] = 0;
+//        indexOfMax = isAllPrinted(a);
+//    }
+//
+//    if (isZero) printf("0");
+//    printf("\n");
+//}
 struct Polynom unaryMinus(struct Polynom a) {
     struct Mono empty;
     empty.deg = 0;
@@ -322,10 +338,10 @@ void polynomVarInit(char name, struct Polynom a) {
 FILE* f;
 
 int main(int argc, char*argv[]) {
-	f = fopen(argv[1],"r");
+    f = fopen("example.txt", "r");
+	///f = fopen(argv[1],"r");
 	yyparse();
 	fclose(f);
     //Должен быть отсортирован вывод
     //Полинов от нескольких переменных A=x B=y A=A-B должно быть ошибкой
-    
 }
