@@ -16,7 +16,7 @@ struct Polynom polynomInit(struct Mono mono) {
 struct Polynom polynomSum(struct Polynom a, struct Polynom b) {
     //check for multiple values
     if (a.name!=0 && b.name!=0 && a.name != b.name) {
-        yyerror("different values");
+        yyerror("different values", true);
         a.error = 1; //we change only function-local a.error state to 1, in global meaning it's still a.error == 0 for a
         return a;    //so it's ok to change a there
 
@@ -55,7 +55,7 @@ struct Polynom polynomSum(struct Polynom a, struct Polynom b) {
 struct Polynom polynomSub(struct Polynom a, struct Polynom b) {
     //check for multiple values
     if (a.name != 0 && b.name != 0 && a.name != b.name) {
-        yyerror("different values");
+        yyerror("different values", true);
         a.error = 1; //we change only function-local a.error state to 1, in global meaning it's still a.error == 0 for a
         return a;    //so it's ok to change a there
     }
@@ -100,7 +100,7 @@ int hasDeg(struct Polynom a,int deg) {
 struct Polynom polynomMul(struct Polynom a, struct Polynom b) {
     //check for multiple values
     if (a.name != 0 && b.name != 0 && a.name != b.name) {
-        yyerror("different values");
+        yyerror("different values",true);
         a.error = 1; //we change only function-local a.error state to 1, in global meaning it's still a.error == 0 for a
         return a;    //so it's ok to change a there
 
@@ -132,7 +132,7 @@ struct Polynom polynomMul(struct Polynom a, struct Polynom b) {
 struct Polynom polynomPow(struct Polynom a,int number) {
     struct Polynom newPolynom;
     if (number < 0) {
-        yyerror("negative power");
+        yyerror("negative power", true);
         newPolynom.error = 1;
         return newPolynom;
     }
@@ -144,7 +144,7 @@ struct Polynom polynomPow(struct Polynom a,int number) {
             }
         }
         if (isZero) {
-            yyerror("undefined 0^0");
+            yyerror("undefined 0^0", true);
             newPolynom.error = 1;
             return newPolynom;
         }
@@ -190,17 +190,17 @@ void polynomPrint(struct Polynom a) {
     bool isZero = true;
     a=sortPolynom(a);
     for (int i = MAX_LEN-1; i >= 0; i--) {
-        //ГЌГҐГ­ГіГ«ГҐГўГ®Г© Г®Г¤Г­Г®Г·Г«ГҐГ­
+        //Ненулевой одночлен
         if (a.koef[i][COEF] != 0) {
             isZero = false;
-            //ГЌГҐ ГЇГҐГ°ГўГ»Г© ГЁ ГЇГ®Г«Г®Г¦ГЁГІГҐГ«ГјГ­Г»Г© Г®Г¤Г­Г®Г·Г«ГҐГ­ - ГўГ»ГўГ®Г¤ГЁГ¬ ГЇГ«ГѕГ±
+            //Не первый и положительный одночлен - выводим плюс
             if (!firstPrint && a.koef[i][COEF]>0) {
                 printf("+");
             }
-            //ГЋГ¤Г­Г®Г·Г«ГҐГ­ Г± Г­ГҐГ­ГіГ«ГҐГўГ®Г© Г±ГІГҐГЇГҐГ­ГјГѕ
+            //Одночлен с ненулевой степенью
             if (a.koef[i][DEG] != 0) {
                 if (a.koef[i][COEF] != 1) {
-                    //Г‘Г«ГіГ·Г Г©: -1x
+                    //Случай: -1x
                     if (a.koef[i][COEF] == -1) {
                         printf("-");
                     }
@@ -208,14 +208,14 @@ void polynomPrint(struct Polynom a) {
                         printf("%d", a.koef[i][COEF]);
                     }
                 }
-                //Г‚Г»ГўГ®Г¤ГЁГ¬ ГЎГіГЄГўГі (x)
+                //Выводим букву (x)
                 printf("%c", a.name);
-                //Г‘ГІГҐГЇГҐГ­Гј
+                //Степень
                 if (a.koef[i][DEG] > 1) {
                     printf("^%d", a.koef[i][DEG]);
                 }            
             }
-            //Г—ГЁГ±Г«Г®
+            //Число
             else {
                 printf("%d", a.koef[i][COEF]);
             }
@@ -225,57 +225,6 @@ void polynomPrint(struct Polynom a) {
     if (isZero) printf("0");
     printf("\n");
 };
-int isAllPrinted(struct Polynom a) {
-    int resultDeg = -1;
-    int index = -1;
-
-    //check if there is not a null degree
-    for (int i = MAX_LEN - 1; i >= 0; i--) {
-        if (a.koef[i][COEF] != 0) {
-            if (a.koef[i][DEG] > resultDeg) { resultDeg = a.koef[i][DEG]; index = i; }
-        }
-    }
-
-    return index;
-}
-//void polynomPrint(struct Polynom a) {
-//    bool isZero = true;
-//    bool firstPrint = true;
-//    int indexOfMax = isAllPrinted(a);
-//
-//    //until all components printed
-//    while (indexOfMax != -1) {
-//        isZero = false;
-//        
-//        //***PRINT STARTS HERE***
-//        //not first and positive
-//        if (!firstPrint && a.koef[indexOfMax][COEF] > 0) {
-//            printf("+");
-//        }
-//
-//        //printing COEF
-//        if (a.koef[indexOfMax][COEF] != 1 || a.koef[indexOfMax][DEG]==0) {
-//            if (a.koef[indexOfMax][COEF] == -1) printf("-");
-//            else printf("%d", a.koef[indexOfMax][COEF]); 
-//        }
-//
-//        //printing letter
-//        if (a.koef[indexOfMax][DEG] != 0) printf("%c", a.name);
-//
-//        //printing degree
-//        if (a.koef[indexOfMax][DEG] > 1) printf("^%d", a.koef[indexOfMax][DEG]);
-//
-//        firstPrint = false;
-//        // ***END OF PRINT***
-//
-//        a.koef[indexOfMax][DEG] = -1;
-//        a.koef[indexOfMax][COEF] = 0;
-//        indexOfMax = isAllPrinted(a);
-//    }
-//
-//    if (isZero) printf("0");
-//    printf("\n");
-//}
 struct Polynom unaryMinus(struct Polynom a) {
     struct Mono empty;
     empty.deg = 0;
@@ -293,7 +242,7 @@ struct Polynom polynomPowPolynom(struct Polynom a, struct Polynom b) {
     struct Polynom res;
     for (int i = 0; i < MAX_LEN; i++) {
         if (b.koef[i][DEG] > 0) {
-            yyerror("pow polynom in polynom");
+            yyerror("pow polynom in polynom", true);
             //return;
             res.error = 1;
             return res;
@@ -342,6 +291,6 @@ int main(int argc, char*argv[]) {
 	f = fopen(argv[1],"r");
 	yyparse();
 	fclose(f);
-    //ГЇГ°ГЁГ­Г¶ГЁГЇГ» ГїГ§Г»ГЄГ , ГЈГ°Г Г¬Г¬Г ГІГЁГЄГ  Гў Г®ГІГ·ГҐГІГҐ, ГЇГ®Г·ГҐГ¬Гі Г±ГІГ ГІ Г¬Г Г±Г±ГЁГў?, 
-    //Г±ГІГ°ГіГЄГІГіГ°ГЁГ°Г®ГўГ ГІГј Г®ГёГЁГЎГЄГЁ ГЇГ® ГЄГ ГІ, Г®ГёГЁГЎГЄГ  Г­ГіГ«ГҐГўГ®Г© Г±ГІГ°Г®ГЄГЁ x^0 = y, ГЄГ ГЄ ГЎГ®Г°Г®Г«ГЁГ±Гј Г± Г®ГёГЁГЎГЄГ Г¬ГЁ yacc shift/reduce, 
+    //принципы языка, грамматика в отчете, почему стат массив?, 
+    //структурировать ошибки по кат, как боролись с ошибками yacc shift/reduce, 
 }

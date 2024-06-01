@@ -26,7 +26,7 @@ int yylex(){
 		yylval.sym = c;
 		if (!check) check = c;
 		else {
-			if (check != c) { yyerror("error - different values"); exit(-1); }
+			if (check != c) { yyerror("error - different values",true); exit(-1); }
 		}
 		return LETTER_LOW;
 	}
@@ -51,6 +51,14 @@ int yylex(){
 	return c;
 }
 
-int yyerror(const char* str) {
-	fprintf(stderr, "error in line %d: %s\n", line, str);
+int yyerror(const char* str,bool is) {
+	if (is == true) {
+		fprintf(stderr, "error in line %d: %s\n", line, str);
+	}
+	else {
+		fprintf(stderr, "error in line %d: %s\n", line+1, str);
+		exit(-1);
+		line++;
+		line++;
+	}
 }
